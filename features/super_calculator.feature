@@ -15,3 +15,4 @@ Feature: Super Calculator
     Given Callie decides to use the Super Calculator
      When she adds 19 and 23
      Then she should see that the result is 42
+     And she should verify font-size of result is 24.5
