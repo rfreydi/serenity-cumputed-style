@@ -30,3 +30,18 @@ Then(/(?:he|she|they) should see that the result is (.*)/, (expectedResult: stri
     actorInTheSpotlight().attemptsTo(
         Ensure.that(CalculationResult(), equals(expectedResult)),
     ));
+
+const ComputedStyle = (target: Question<ElementFinder>, property: string, pseudoElt: string | null = null) =>
+  Question.about(`computed style ${ property } of ${ target }${ pseudoElt || '' }`, actor =>
+    BrowseTheWeb.as(actor).executeScript(
+      `window.getComputedStyle of ${ target }${ pseudoElt || '' }`,
+      `return window.getComputedStyle(arguments[0], arguments[1])`,
+      target.answeredBy(actor),
+      pseudoElt
+    ).then(style => style && style[property])
+  );
+
+Then(/(?:he|she|they) should verify font-size of result is (.*)/, (fontSize: string) =>
+    actorInTheSpotlight().attemptsTo(
+      Ensure.that(ComputedStyle(SuperCalculatorWidget.result, 'backgroundImage', ':after'), equals(`${fontSize}px`))
+    ));
